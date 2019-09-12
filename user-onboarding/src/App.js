@@ -26,13 +26,15 @@ const Header = styled.div`
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 50%;
   margin: 0 auto;
   margin: 1rem;
   padding: 1rem;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
-
+  border: .175rem solid rgb(77,103,107);
+  border-radius: .7rem;
+a
 `
 
 const App =({ errors, touched, status }) =>  {
@@ -71,21 +73,23 @@ const App =({ errors, touched, status }) =>  {
               <Field type="checkbox" name = "terms" />
             </label><br /><br />
             <button type="submit" name="submit">Submit</button>
+            </Form>
+          </FormContainer>
 
-          {users.map((user) => {
-            return <div>
+          {users.map((user, index) => {
+            return <div className="user-card" key={index}>
               <h3>Name: {user.name}</h3>
               <p>Email: {user.email}</p>
-              <p>Password: {user.notes}</p>
+              <p>Password: {user.password}</p>
+              {console.log(user[index])}
           </div>
             })}
 
-          </Form>
-        </FormContainer>
       </Container>
     </div>
   );
 }
+
 
 export default withFormik({
 
