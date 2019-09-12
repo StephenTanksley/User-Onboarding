@@ -33,16 +33,16 @@ const App =({ errors, touched, status }) =>  {
 
           {touched.terms && errors.terms && <p className='error'>{errors.terms}</p>}
           <label>  
-            <Field type="checkbox" name = "terms" />
             <span>Have you read our Terms and Conditions?</span>
+            <Field type="checkbox" name = "terms" />
           </label>
           <button type="submit" name="submit">Submit</button>
 
         {users.map((user) => {
           return <div>
             <h2>Name: {user.name}</h2>
-            <p>Diet: {user.email}</p>
-            <p>Notes: {user.notes}</p>
+            <p>Email: {user.email}</p>
+            <p>Password: {user.notes}</p>
         </div>
           })}
 
@@ -53,4 +53,31 @@ const App =({ errors, touched, status }) =>  {
 
 export default withFormik({
 
+  mapPropsToValues: (values) => {
+
+   return {
+     name: values.name || '',
+     email: values.email || '',
+     password: values.password || '',
+     terms: values.terms || false,
+   }
+ },
+
+validationSchema: yup.object().shape({
+  name: yup.string().required('User\'s name is required.'),
+  email: yup.string().required('User\'s email address is required.'),
+  password: yup.string().required('User must enter a password.'),
+  terms: yup.boolean().oneOf([true], 'User must agree to Terms and Conditions to proceed.')
+}),
+
+handleSubmit: (values, { setStatus }) => {
+  axios.post('https://reqres.in/api/users_', values)
+    .then((res) => {
+      console.log(res)
+      setStatus(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
 })(App)
