@@ -2,49 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { withFormik, Form, Field } from 'formik'
 import * as yup from 'yup';
 import axios from 'axios'
-import styled from 'styled-components'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  padding: 2rem;
-  width: 80%;
-  justify-content: space-around;
-  align-items: center;
-
-`
-
-const Header = styled.div`
-  display: flex;
-  font-size: 62.5%;
-  font-size: 1.6rem;
-  font-weight: 800;
-  margin: 2rem;
-`
-
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: 0 auto;
-  margin: 1rem;
-  padding: 1rem;
-  justify-content: center;
-  align-items: center;
-  border: .175rem solid rgb(77,103,107);
-  border-radius: .7rem;
-a
-`
+import { FormContainer, Header, Container } from './Components/Styled'
 
 const App =({ errors, touched, status }) =>  {
 
   console.log(status)
   const [users, setUsers] = useState([])
-
-  // errors === form validation errors that come from formik
-  // touched === an object with true/false for each input field, whether the user has touched it yet or not
-  // status === an object coming from formik containing a new animal (from when we call setStatus)  
+  
+  // const resetForm = () => {
+    //   setUsers(initialState)
+    // }
+  // const initialState = { name: '', email: '', password: '', role: '', terms: false}
+    // errors === form validation errors that come from formik
+    // touched === an object with true/false for each input field, whether the user has touched it yet or not
+    // status === an object coming from formik containing a new animal (from when we call setStatus)  
 
   useEffect(() => {
     if(status) {
@@ -53,6 +24,7 @@ const App =({ errors, touched, status }) =>  {
   }, [status])
 
   return (
+
     <div className="App">
       <Container>
         <Header>User Portal</Header>
@@ -66,6 +38,15 @@ const App =({ errors, touched, status }) =>  {
 
             {touched.password && errors.password && <p className='error'>{errors.password}</p>}
             <Field type="text" name="password" placeholder="Password" /><br /><br />
+
+            {touched.role && errors.role && <p className='error'>{errors.role}</p>}
+            <Field component="select" name="role" placeholder="Role">
+              <option value="" disabled>Select Role: </option>
+              <option value="developer">Developer</option>
+              <option value="legal">Legal</option>
+              <option value="ux-designer">UX Designer</option>
+            </Field><br /><br />
+
 
             {touched.terms && errors.terms && <p className='error'>{errors.terms}</p>}
             <label>  
@@ -81,6 +62,7 @@ const App =({ errors, touched, status }) =>  {
               <h3>Name: {user.name}</h3>
               <p>Email: {user.email}</p>
               <p>Password: {user.password}</p>
+              <p>Role: {user.role}</p>
               {console.log(user[index])}
           </div>
             })}
@@ -99,6 +81,7 @@ export default withFormik({
      name: values.name || '',
      email: values.email || '',
      password: values.password || '',
+     role: values.role || '',
      terms: values.terms || false,
    }
  },
@@ -115,6 +98,7 @@ handleSubmit: (values, { setStatus }) => {
     .then((res) => {
       console.log(res)
       setStatus(res.data)
+      // resetForm();
     })
     .catch((err) => {
       console.log(err)
